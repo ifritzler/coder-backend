@@ -1,24 +1,36 @@
 class TicketManager {
+  #precioBaseDeGanancia = 0.15
+  #lastIndex = 0;
+
   constructor() {
     this.events = []
-    this._precioBaseDeGanancia = 0.15
-    this._lastIndex = 0
+    this.#precioBaseDeGanancia = 0.15
+    this.#lastIndex = 0;
   }
 
   getEventos() {
     return this.events
   }
 
-  getLastIndex() {
-    return this._lastIndex
+  #getNextId() {
+    return this.#lastIndex + 1
+  }
+
+  #setNewIndex(callback) {
+    if(!callback) {
+      this.#lastIndex += 1
+    } else {
+      this.#lastIndex = callback(this.#lastIndex)
+    }
+    return this.#lastIndex
   }
 
   agregarEvento(nombre, lugar, precio, capacidad = 50, fecha = new Date().toLocaleDateString()) {
 
-    let newId = this.getLastIndex() + 1
+    let newId = this.#getNextId()
     
     const participantes = []
-    const precioMasImpustoBase = precio + this._precioBaseDeGanancia
+    const precioMasImpustoBase = precio + this.#precioBaseDeGanancia
     const newEvent = { 
       id: newId, 
       nombre, 
@@ -29,8 +41,8 @@ class TicketManager {
       participantes 
     }
 
+    this.#setNewIndex()
     this.events = [...this.events, newEvent]
-    this._lastIndex = newId
   }
 
   agregarUsuario(eventId, idUsuario) {
@@ -59,10 +71,10 @@ class TicketManager {
     const event = this.events.find(event => event.id === eventId)
     if(!event) return
 
-    const id = this.getLastIndex() + 1
+    const id = this.#getNextId()
     const newEvent = {...event, lugar: nuevaLocalidad, fecha: nuevaFecha, id, participantes: []}
     this.events = [...this.events, newEvent]
-    this._lastIndex = id
+    this.#setNewIndex()
   }
 }
 
