@@ -1,0 +1,23 @@
+[
+	{
+		"id": 1,
+		"nombre": "Ilan",
+		"apellido": "Fritzler",
+		"edad": 28,
+		"curso": "Progamacion Backend"
+	},
+	{
+		"id": 2,
+		"nombre": "Jason",
+		"apellido": "Doe",
+		"edad": 33,
+		"curso": "React JS"
+	},
+	{
+		"id": 3,
+		"nombre": "Alice",
+		"apellido": "Kruger",
+		"edad": 35,
+		"curso": "Javascript"
+	}
+]
