@@ -19,9 +19,9 @@ Existen 3 ramas importantes a nivel de este proyecto.
 ---
 - ## Modulo 1
 
-  - [ ] [Clase 0 - Principios de programación Backend](#)
-  - [ ] [Clase 1 - Principios básicos de Javascript](#)
-  - [ ] [Clase 2 - Nuevas funcionalidades de los lenguajes ECMAScritpt](#)
+  - [X] Clase 0 - Principios de programación Backend (Sin desafio)
+  - [X] Clase 1 - Principios básicos de Javascript (Sin desafio)
+  - [X] [Clase 2 - Nuevas funcionalidades de los lenguajes ECMAScritpt](https://github.com/ifritzler/coder-backend/pull/1)
   - [ ] [Clase 3 - Programación sincrónica y asincrónica](#)
   - [ ] [Clase 4 - Manejo de archivos en Javascript](#)
   - [ ] [Clase 5 - Administrador de paquetes NPM](#)
