@@ -7,8 +7,9 @@ module.exports = class ProductManager {
         this.rowCount = 0;
       } else {
         const raw = await fs.promises.readFile(path, { encoding: "utf-8" });
+        console.log(raw)
         const data = JSON.parse(raw);
-        this.rowCount = data[data.length - 1].id;
+        this.rowCount = data[data.length - 1]?.id || 0;
       }
     })();
   }
@@ -60,11 +61,10 @@ module.exports = class ProductManager {
         return newProduct;
       }
       // Caso donde el archivo ya existe. Leo el archivo y lo parseo
-      const file = await fs.promises.readFile(this.path, { encoding: "utf-8" });
-      let data = JSON.parse(file);
+      const data = await this.getProducts()
 
       // Verifico que el codigo no exista
-      const found = this.getProductByCode(code);
+      const found = await this.getProductByCode(code);
       if (found) {
         throw new Error(`The product with code: ${code} is already exists`);
       }
@@ -85,8 +85,7 @@ module.exports = class ProductManager {
   async getProductByCode(code) {
     if (!fs.existsSync(this.path)) return null;
 
-    const file = await fs.promises.readFile(this.path, { encoding: "utf-8" });
-    let data = JSON.parse(file);
+    const data = await this.getProducts()
     return data.find((product) => product.code === code);
   }
 
@@ -104,10 +103,7 @@ module.exports = class ProductManager {
 
   async getProductById(productId) {
     try {
-      const response = await fs.promises.readFile(this.path, {
-        encoding: "utf-8",
-      });
-      const data = JSON.parse(response);
+      const data = await this.getProducts()
       const productFound = data.find((product) => product.id === productId);
       if (!productFound) {
         throw new Error(`The product with id: ${productId} does not found`);
@@ -120,15 +116,13 @@ module.exports = class ProductManager {
 
   async updateProductById(productId, changes) {
     try {
-      const response = await fs.promises.readFile(this.path, {
-        encoding: "utf-8",
-      });
-      const data = JSON.parse(response);
-      const productFound = data.find((product) => product.id === productId);
+      const productFound = await this.getProductById(productId);
       if (!productFound) {
         throw new Error(`The product with id: ${productId} does not found`);
       }
       const updated = { ...productFound, ...changes };
+      
+      const data = await this.getProducts()
       const newData = data.map((product) => {
         if (product.id === productId) {
           return updated;
@@ -147,15 +141,13 @@ module.exports = class ProductManager {
 
   async deleteProductById(productId) {
     try {
-      const response = await fs.promises.readFile(this.path, {
-        encoding: "utf-8",
-      });
-      const data = JSON.parse(response);
-      if (!data.find((product) => product.id === productId)) {
+      const data = await this.getProducts()
+      const found = await this.getProductById(productId)
+      if (!found) {
         throw new Error(`Product with id ${productId} does not exists`);
       }
       const newData = data.filter((product) => product.id !== productId);
-      console.log({ productId, preDeleted: data, postDeleted: newData });
+
       await fs.promises.writeFile(
         this.path,
         JSON.stringify(newData, null, "\t")
